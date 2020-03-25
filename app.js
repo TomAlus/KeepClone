@@ -8,6 +8,7 @@ class App {
 		this.$formButtons = document.querySelector("#form-buttons");
     this.$placeholder = document.querySelector("#placeholder");
     this.$notes = document.querySelector("#notes");
+    this.$closeFormBtn = document.querySelector('#form-close-button');
 
 		this.addEventListeners();
 	}
@@ -17,27 +18,39 @@ class App {
 			this.haldleFormClick(event);
 		});
 
-    this.$form.addEventListener('submit', event => {
+    this.$form.addEventListener("submit", event => {
       event.preventDefault();
 
       const title = this.$noteTitle.value;
       const text = this.$noteText.value;
+      const hasNote = title || text;
 
-      if(title && text) {
+      if(hasNote) {
         // add note
         this.addNote({ title, text });
       } else {
 
       }
-    })
+    });
+
+    this.$closeFormBtn.addEventListener("click", event => {
+      event.stopPropagation();
+      this.closeForm();
+    });
 	}
 
 	haldleFormClick(event) {
 		const isFormClicked = this.$form.contains(event.target);
 
-		if (isFormClicked) {
+    const title = this.$noteTitle.value;
+    const text = this.$noteText.value;
+    const hasNote = title || text;
+
+		if(isFormClicked) {
 			this.openForm();
-		} else {
+		} else if(hasNote) {
+      this.addNote({ title, text });
+    } else {
 			this.closeForm();
 		}
 	}
@@ -53,10 +66,10 @@ class App {
     this.$noteTitle.value = '';
     this.$noteText.value = '';
 	}
-  addNote(note) {
+  addNote({ title, text }) {
     const newNote = {
-      title: note.title,
-      text: note.text,
+      title,
+      text,
       color: 'white',
       id: this.notes.length > 0 ? this.notes[this.notes.length - 1].id + 1 : 1
     };
