@@ -15,6 +15,7 @@ class App {
     this.$modal = document.querySelector(".modal");
     this.$modalTitle = document.querySelector(".modal-title");
     this.$modalText = document.querySelector(".modal-text");
+    this.$modalCloseButton = document.querySelector(".modal-close-button")
 
     this.addEventListeners();
   }
@@ -32,7 +33,6 @@ class App {
       const text = this.$noteText.value;
       const hasNote = title || text;
       if (hasNote) {
-        // add note
         this.addNote({ title, text });
       }
     });
@@ -41,6 +41,10 @@ class App {
       event.stopPropagation();
       this.closeForm();
     });
+
+    this.$modalCloseButton.addEventListener("click", event => {
+      this.closeModal(event);
+    })
   }
 
   handleFormClick(event) {
@@ -75,10 +79,15 @@ class App {
   
   openModal(event) {
      if (event.target.closest('.note')) {
-        this.$modal.classList.toggle('open-modal');  
-        this.$modalTitle.value = this.title;
-        this.$modalText.value = this.text;
+      this.$modal.classList.toggle('open-modal');  
+      this.$modalTitle.value = this.title;
+      this.$modalText.value = this.text;
      }
+  }
+
+  closeModal(event) {
+    this.editNote();
+    this.$modal.classList.toggle('open-modal'); 
   }
 
   addNote({ title, text }) {
@@ -92,14 +101,25 @@ class App {
     this.displayNotes();
     this.closeForm();
   }
+
+  editNote() {
+    const title = this.$modalTitle.value;
+    const text = this.$modalText.value;
+    this.notes = this.notes.map(note => 
+      note.id === Number(this.id) ? { ...note, title, text } : note
+    );
+    this.displayNotes();
+ }
   
   selectNote(event) {
-     const $selectedNote = event.target.closest('.note');
-     if (!$selectedNote) return;
-     const [$noteTitle, $noteText] = $selectedNote.children;
-     this.title = $noteTitle.innerText;
-     this.text = $noteText.innerText;
-     this.id = $selectedNote.dataset.id;
+    const $selectedNote = event.target.closest('.note');
+
+    if (!$selectedNote) return;
+
+    const [$noteTitle, $noteText] = $selectedNote.children;     
+    this.title = $noteTitle.innerText;
+    this.text = $noteText.innerText;
+    this.id = $selectedNote.dataset.id;
   }
 
   displayNotes() {
