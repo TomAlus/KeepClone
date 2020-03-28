@@ -25,7 +25,6 @@ class App {
 
   addEventListeners() {
     document.body.addEventListener("click", event => {
-      console.log(event.target)
       this.handleFormClick(event);
       this.selectNote(event);
       this.deleteNote(event);
