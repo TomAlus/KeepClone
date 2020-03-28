@@ -129,8 +129,6 @@ class App {
     const vertical = noteCoords.top + window.scrollY;
     this.$colorTooltip.style.transform = `translate(${horizontal}px, ${vertical}px)`;
     this.$colorTooltip.style.display = 'flex';
-
-    console.log('noteCoords: ', noteCoords)
   }
   
   closeTooltip(event) {
