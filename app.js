@@ -178,10 +178,12 @@ class App {
 
   deleteNote(event) {
     event.stopPropagation();
+
     if (!event.target.matches('.toolbar-delete')) return;
+
     const id = event.target.dataset.id;
     this.notes = this.notes.filter(note => note.id !== Number(id));
-    this.render;
+    this.render();
   }
 
   render() {
